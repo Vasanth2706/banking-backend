@@ -1,0 +1,46 @@
+server:
+  port: 8765
+
+spring:
+  cloud:
+   gateway:
+     routes:
+       - id: customer-service
+         uri: lb://CUSTOMER-SERVICE
+         predicates:
+           - Path=/customer/**
+         filters:
+           - AuthFilter
+           
+       - id: Accounts-Microservice
+         uri: lb://ACCOUNT-SERVICE
+         predicates:
+           - Path=/accounts/**
+         filters:
+           - AuthFilter
+           
+       - id: Transactions-Microservice
+         uri: lb://TRANSACTION-SERVICE
+         predicates:
+           - Path=/transactions/**
+         filters:
+           - AuthFilter
+           
+       - id: Login-Microservice
+         uri: lb://AUTH-SERVICE
+         predicates:
+           - Path=/auth/**
+           
+  application:
+    name: gateway
+    
+eureka:
+    client:
+       register-with-eureka: true
+       fetch-registry: true
+       service-url:
+              defaultZone:  http://localhost:8761/eureka/
+
+    instance:
+       hostname: localhost
+    
